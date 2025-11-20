@@ -22,6 +22,8 @@ Examples:
   %(prog)s --log-file server.log --log-level DEBUG  # Both file and DEBUG level
   %(prog)s --sbt-executable /usr/local/bin/sbt  # Use custom SBT executable
   %(prog)s --sbt-executable sbt.bat            # Use sbt.bat on Windows
+  %(prog)s --workdir /path/to/project          # Run sbt commands in specific directory
+  %(prog)s --workdir ./my-scala-project        # Run sbt commands in relative directory
         """,
     )
 
@@ -40,6 +42,12 @@ Examples:
         help="Path to the SBT executable (e.g., sbt, sbt.bat, or full path to executable)",
     )
 
+    parser.add_argument(
+        "--workdir",
+        type=str,
+        help="Working directory where sbt commands will be executed (default: current directory)",
+    )
+
     return parser.parse_args()
 
 
@@ -50,7 +58,9 @@ def main():
     logger.info("Starting MCP SBT server")
 
     # Start the server with parsed arguments
-    main_sync(log_file=args.log_file, log_level=args.log_level, sbt_executable=args.sbt_executable)
+    main_sync(
+        log_file=args.log_file, log_level=args.log_level, sbt_executable=args.sbt_executable, workdir=args.workdir
+    )
 
 
 if __name__ == "__main__":

@@ -139,22 +139,27 @@ def restart_sbt() -> str:
         return f"Failed to restart SBT: {e!s}"
 
 
-def main_sync(log_file=None, log_level="INFO", sbt_executable=None):
+def main_sync(log_file=None, log_level="INFO", sbt_executable=None, workdir=None):
     """Synchronous entry point for the script.
 
     Args:
         log_file: Optional path to log file for output
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         sbt_executable: Optional path to SBT executable
+        workdir: Optional working directory where sbt commands will be executed
     """
     global sbt_manager
 
     # Setup logging first
     setup_logging(log_file=log_file, log_level=log_level)
 
-    # Initialize SBT manager with provided executable
-    sbt_manager = SbtManager(sbt_path=sbt_executable)
+    # Initialize SBT manager with provided executable and workdir
+    sbt_manager = SbtManager(sbt_path=sbt_executable, workdir=workdir)
     logger.info(f"Initialized SBT manager with executable: {sbt_executable or 'sbt'}")
+    if workdir:
+        logger.info(f"Using working directory: {workdir}")
+    else:
+        logger.info("Using current working directory")
 
     logger.info("Starting MCP SBT server")
     setup_signal_handlers()

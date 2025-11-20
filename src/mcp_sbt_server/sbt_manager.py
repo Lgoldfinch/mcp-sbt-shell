@@ -3,22 +3,35 @@ import os
 import subprocess
 import threading
 import time
+from pathlib import Path
 from typing import List, Optional
 
 logger = logging.getLogger("mcp_sbt_server.sbt_manager")
 
 
 class SbtManager:
-    def __init__(self, timeout: int = 30, sbt_path: Optional[str] = None):
+    def __init__(self, timeout: int = 30, sbt_path: Optional[str] = None, workdir: Optional[str] = None):
         self.timeout = timeout
         self.sbt_path = sbt_path or "sbt"
+        self.workdir = workdir
         self.process: Optional[subprocess.Popen] = None
         self.ready = False
         self._lock = threading.Lock()
         self._output_buffer = []
         self._ready_event = threading.Event()
         self._stderr_monitor_thread: Optional[threading.Thread] = None
-        logger.info(f"SBT Manager initialized with timeout={timeout}s, sbt_path={self.sbt_path}")
+
+        # Validate workdir if provided
+        if self.workdir:
+            workdir_path = Path(self.workdir)
+            if not workdir_path.exists():
+                raise RuntimeError(f"Working directory does not exist: {self.workdir}")
+            if not workdir_path.is_dir():
+                raise RuntimeError(f"Working directory path is not a directory: {self.workdir}")
+
+        logger.info(
+            f"SBT Manager initialized with timeout={timeout}s, sbt_path={self.sbt_path}, workdir={self.workdir or 'current directory'}"
+        )
 
     def start(self) -> None:
         with self._lock:
@@ -26,7 +39,9 @@ class SbtManager:
                 logger.info("SBT process is already running")
                 return
 
-            logger.info(f"Starting SBT process with executable: {self.sbt_path}")
+            # Determine the working directory to use
+            cwd = self.workdir if self.workdir else os.getcwd()
+            logger.info(f"Starting SBT process with executable: {self.sbt_path} in directory: {cwd}")
 
             try:
                 self.process = subprocess.Popen(
@@ -35,7 +50,7 @@ class SbtManager:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
-                    cwd=os.getcwd(),
+                    cwd=cwd,
                     bufsize=1,
                     universal_newlines=True,
                 )
