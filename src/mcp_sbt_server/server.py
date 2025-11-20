@@ -1,18 +1,13 @@
 import logging
+import os
 import signal
 import sys
+from pathlib import Path
 
 from fastmcp import FastMCP
 
 from .sbt_manager import SbtManager
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stderr),
-    ],
-)
 logger = logging.getLogger("mcp_sbt_server")
 
 # Initialize FastMCP server
@@ -20,6 +15,52 @@ mcp = FastMCP("mcp-sbt-server")
 
 # Global SBT manager instance
 sbt_manager = SbtManager()
+
+
+def setup_logging(log_file=None, log_level="INFO"):
+    """Configure logging with optional file output and custom level.
+
+    Args:
+        log_file: Optional path to log file. If None, logs to stderr only.
+        log_level: Logging level as string (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    """
+    # Convert string log level to logging constant
+    numeric_level = getattr(logging, log_level.upper(), logging.INFO)
+
+    # Clear any existing handlers
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    # Create formatter
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+    # Always add stderr handler
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    stderr_handler.setFormatter(formatter)
+    root_logger.addHandler(stderr_handler)
+
+    # Add file handler if log_file is specified
+    if log_file:
+        try:
+            # Create directory if it doesn't exist
+            log_path = Path(log_file)
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+
+            # Create file handler with append mode
+            file_handler = logging.FileHandler(log_file, mode="a")
+            file_handler.setFormatter(formatter)
+            root_logger.addHandler(file_handler)
+
+            logger.info(f"Logging to file: {log_file}")
+        except Exception as e:
+            logger.error(f"Failed to set up file logging to {log_file}: {e}")
+            # Continue with stderr-only logging
+
+    # Set the logging level
+    root_logger.setLevel(numeric_level)
+
+    logger.info(f"Logging configured at level: {log_level}")
 
 
 def setup_signal_handlers():
@@ -99,8 +140,16 @@ def restart_sbt() -> str:
         return f"Failed to restart SBT: {e!s}"
 
 
-def main_sync():
-    """Synchronous entry point for the script."""
+def main_sync(log_file=None, log_level="INFO"):
+    """Synchronous entry point for the script.
+
+    Args:
+        log_file: Optional path to log file for output
+        log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    """
+    # Setup logging first
+    setup_logging(log_file=log_file, log_level=log_level)
+
     logger.info("Starting MCP SBT server")
     setup_signal_handlers()
 
