@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "sbt": {
-      "command": "python",
-      "args": ["-m", "mcp_sbt_server"],
-      "cwd": "d:\\Code\\mini-projects\\mcp-sbt-server"
-    }
-  }
-}

@@ -6,12 +6,11 @@ from fastmcp import FastMCP
 
 from .sbt_manager import SbtManager
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.StreamHandler(sys.stdout),
+        logging.StreamHandler(sys.stderr),
     ],
 )
 logger = logging.getLogger("mcp_sbt_server")
@@ -100,14 +99,9 @@ def restart_sbt() -> str:
         return f"Failed to restart SBT: {e!s}"
 
 
-def main_sync(host: str, port: int):
-    """Synchronous entry point for the script.
-
-    Args:
-        host: Host to bind the server to
-        port: Port to bind the server to
-    """
-    logger.info(f"Starting MCP SBT server with host={host}, port={port}")
+def main_sync():
+    """Synchronous entry point for the script."""
+    logger.info("Starting MCP SBT server")
     setup_signal_handlers()
 
-    mcp.run(transport="streamable-http", host=host, port=port)
+    mcp.run(transport="stdio")
