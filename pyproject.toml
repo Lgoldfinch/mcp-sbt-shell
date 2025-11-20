@@ -16,7 +16,7 @@ dev = [
 ]
 
 [project.scripts]
-mcp_sbt_server = "mcp_sbt_server.server:main_sync"
+mcp_sbt_server = "mcp_sbt_server.__main__:main"
 
 [tool.ruff]
 line-length = 120

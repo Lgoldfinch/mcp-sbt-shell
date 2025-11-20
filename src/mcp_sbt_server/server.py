@@ -13,8 +13,10 @@ mcp = FastMCP("mcp-sbt-server")
 # Global SBT manager instance
 sbt_manager = SbtManager()
 
+
 def setup_signal_handlers():
     """Setup signal handlers for graceful shutdown."""
+
     def signal_handler(signum, frame):
         sbt_manager.stop()
         sys.exit(0)
@@ -26,7 +28,7 @@ def setup_signal_handlers():
 @mcp.tool()
 def execute_sbt_command(command: str) -> str:
     """Execute a command in the sbt shell.
-    
+
     Args:
         command: The sbt command to execute
     """
@@ -77,7 +79,3 @@ def main_sync():
     """Synchronous entry point for the script."""
     setup_signal_handlers()
     mcp.run()
-
-
-if __name__ == "__main__":
-    main_sync()
