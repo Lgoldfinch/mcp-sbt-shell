@@ -17,6 +17,7 @@ class SbtManager:
         self._lock = threading.Lock()
         self._output_buffer = []
         self._ready_event = threading.Event()
+        self._stderr_monitor_thread: Optional[threading.Thread] = None
         logger.info(f"SBT Manager initialized with timeout={timeout}s, sbt_path={self.sbt_path}")
 
     def start(self) -> None:
@@ -39,7 +40,14 @@ class SbtManager:
                     universal_newlines=True,
                 )
             except FileNotFoundError as e:
-                error_msg = f"Failed to start SBT process: {e}\n\nSBT executable not found at: {self.sbt_path}\n\nPlease ensure:\n1. SBT is installed on your system\n2. The path to the SBT executable is correct\n3. The executable has proper permissions"
+                error_msg = (
+                    f"Failed to start SBT process: {e}\n\n"
+                    f"SBT executable not found at: {self.sbt_path}\n\n"
+                    f"Please ensure:\n"
+                    f"1. SBT is installed on your system\n"
+                    f"2. The path to the SBT executable is correct\n"
+                    f"3. The executable has proper permissions"
+                )
                 logger.error(error_msg)
                 raise RuntimeError(error_msg) from e
             except Exception as e:
@@ -50,6 +58,11 @@ class SbtManager:
             self.ready = False
             self._ready_event.clear()
             threading.Thread(target=self._monitor_startup, daemon=True).start()
+
+            # Start stderr monitoring thread
+            self._stderr_monitor_thread = threading.Thread(target=self._monitor_stderr, daemon=True)
+            self._stderr_monitor_thread.start()
+
             logger.info("SBT process started, waiting for ready signal")
 
     def _monitor_startup(self) -> None:
@@ -64,11 +77,35 @@ class SbtManager:
                 logger.warning("SBT process ended during startup monitoring")
                 break
 
-            if line.strip().endswith(">"):
+            # Log each stdout line during startup
+            stripped_line = line.strip()
+            if stripped_line:
+                logger.debug(f"SBT stdout: {stripped_line}")
+
+            if stripped_line.endswith(">"):
                 logger.info("SBT process is ready")
                 self.ready = True
                 self._ready_event.set()
                 break
+
+    def _monitor_stderr(self) -> None:
+        """Continuously monitor and log stderr output from the SBT process."""
+        if not self.process:
+            logger.warning("Monitor stderr called but no process exists")
+            return
+
+        logger.debug("Starting stderr monitoring for SBT process")
+        while self.process and self.process.poll() is None:
+            line = self.process.stderr.readline()
+            if not line:
+                break
+
+            stripped_line = line.strip()
+            if stripped_line:
+                # Log stderr at WARNING level since it typically contains error/warning messages
+                logger.warning(f"SBT stderr: {stripped_line}")
+
+        logger.debug("Stderr monitoring ended")
 
     def stop(self) -> None:
         with self._lock:
@@ -83,8 +120,17 @@ class SbtManager:
                     self.process.kill()
                     self.process.wait()
                     logger.info("SBT process force terminated")
+
+            # Wait for stderr monitoring thread to finish
+            if self._stderr_monitor_thread and self._stderr_monitor_thread.is_alive():
+                logger.debug("Waiting for stderr monitoring thread to finish")
+                self._stderr_monitor_thread.join(timeout=2)
+                if self._stderr_monitor_thread.is_alive():
+                    logger.warning("Stderr monitoring thread did not finish gracefully")
+
             self.process = None
             self.ready = False
+            self._stderr_monitor_thread = None
 
     def execute_command(self, command: str) -> str:
         logger.debug(f"Waiting for SBT to be ready before executing command: {command}")
@@ -113,9 +159,14 @@ class SbtManager:
                             raise RuntimeError("SBT process died during command execution")
                         continue
 
+                    stripped_line = line.strip()
+                    # Log stdout during command execution
+                    if stripped_line:
+                        logger.debug(f"SBT stdout: {stripped_line}")
+
                     output_lines.append(line.rstrip("\n\r"))
 
-                    if line.strip().endswith(">"):
+                    if stripped_line.endswith(">"):
                         logger.debug(f"SBT command completed: {command}")
                         break
 
