@@ -1,0 +1,26 @@
+[build-system]
+requires = ["uv_build>=0.9.10,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "mcp-sbt-server"
+version = "0.1.0"
+description = "MCP server for sbt shell management"
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+mcp-sbt-server = "mcp_sbt_server.server:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "RUF"]
