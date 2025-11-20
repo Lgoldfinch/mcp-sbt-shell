@@ -1,8 +1,11 @@
+import logging
 import os
 import subprocess
 import threading
 import time
 from typing import List, Optional
+
+logger = logging.getLogger("mcp_sbt_server.sbt_manager")
 
 
 class SbtManager:
@@ -13,12 +16,15 @@ class SbtManager:
         self._lock = threading.Lock()
         self._output_buffer = []
         self._ready_event = threading.Event()
+        logger.info(f"SBT Manager initialized with timeout={timeout}s")
 
     def start(self) -> None:
         with self._lock:
             if self.process and self.process.poll() is None:
+                logger.info("SBT process is already running")
                 return
 
+            logger.info("Starting SBT process")
             self.process = subprocess.Popen(
                 ["sbt", "--no-colors", "--supershell=false"],
                 stdin=subprocess.PIPE,
@@ -33,17 +39,22 @@ class SbtManager:
             self.ready = False
             self._ready_event.clear()
             threading.Thread(target=self._monitor_startup, daemon=True).start()
+            logger.info("SBT process started, waiting for ready signal")
 
     def _monitor_startup(self) -> None:
         if not self.process:
+            logger.warning("Monitor startup called but no process exists")
             return
 
+        logger.debug("Monitoring SBT startup for ready signal")
         while True:
             line = self.process.stdout.readline()
             if not line:
+                logger.warning("SBT process ended during startup monitoring")
                 break
 
             if line.strip().endswith(">"):
+                logger.info("SBT process is ready")
                 self.ready = True
                 self._ready_event.set()
                 break
@@ -51,24 +62,32 @@ class SbtManager:
     def stop(self) -> None:
         with self._lock:
             if self.process and self.process.poll() is None:
+                logger.info("Stopping SBT process")
                 self.process.terminate()
                 try:
                     self.process.wait(timeout=5)
+                    logger.info("SBT process stopped gracefully")
                 except subprocess.TimeoutExpired:
+                    logger.warning("SBT process did not stop gracefully, forcing termination")
                     self.process.kill()
                     self.process.wait()
+                    logger.info("SBT process force terminated")
             self.process = None
             self.ready = False
 
     def execute_command(self, command: str) -> str:
+        logger.debug(f"Waiting for SBT to be ready before executing command: {command}")
         if not self._ready_event.wait(timeout=10):
+            logger.error("SBT not ready within timeout period")
             raise RuntimeError("SBT not ready within timeout")
 
         with self._lock:
             if not self.process or self.process.poll() is not None:
+                logger.error("SBT process not running when attempting to execute command")
                 raise RuntimeError("SBT process not running")
 
             try:
+                logger.debug(f"Executing SBT command: {command}")
                 self.process.stdin.write(command + "\n")
                 self.process.stdin.flush()
 
@@ -79,21 +98,26 @@ class SbtManager:
                     line = self.process.stdout.readline()
                     if not line:
                         if self.process.poll() is not None:
+                            logger.error("SBT process died during command execution")
                             raise RuntimeError("SBT process died during command execution")
                         continue
 
                     output_lines.append(line.rstrip("\n\r"))
 
                     if line.strip().endswith(">"):
+                        logger.debug(f"SBT command completed: {command}")
                         break
 
                 else:
+                    logger.warning(f"SBT command timed out after {self.timeout} seconds: {command}")
                     raise RuntimeError(f"Command timed out after {self.timeout} seconds")
 
                 return self._truncate_output(output_lines)
 
-            except Exception:
+            except Exception as e:
+                logger.error(f"Exception during SBT command execution: {e}")
                 if self.process and self.process.poll() is not None:
+                    logger.warning("SBT process is no longer running after command execution error")
                     self.ready = False
                     self._ready_event.clear()
                 raise
@@ -119,6 +143,8 @@ class SbtManager:
         return self.ready and self.is_running()
 
     def restart(self) -> None:
+        logger.info("Restarting SBT process")
         self.stop()
         time.sleep(1)
         self.start()
+        logger.info("SBT process restart completed")

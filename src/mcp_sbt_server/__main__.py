@@ -1,8 +1,12 @@
 """CLI entry point for mcp-sbt-server."""
 
 import argparse
-import sys
+import logging
+
 from .server import main_sync
+
+# Configure logging for CLI
+logger = logging.getLogger("mcp_sbt_server.cli")
 
 
 def parse_args():
@@ -20,7 +24,7 @@ Examples:
 
     parser.add_argument("--host", default="localhost", help="Host to bind the server to (default: localhost)")
 
-    parser.add_argument("--port", type=int, default=None, help="Port to bind the server to (default: MCP default port)")
+    parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to (default: 8000)")
 
     parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
 
@@ -31,15 +35,10 @@ def main():
     """Main entry point for the CLI."""
     args = parse_args()
 
-    # Note: FastMCP currently doesn't support host/port configuration
-    # These arguments are kept for future compatibility and documentation
-    if args.host != "localhost" or args.port is not None:
-        print("Note: FastMCP currently uses default host/port configuration.")
-        print(f"Requested host: {args.host}, port: {args.port}")
-        print("Server will start with MCP defaults.")
+    logger.info(f"Starting MCP SBT server with CLI args: host={args.host}, port={args.port}")
 
-    # Start the server
-    main_sync()
+    # Start the server with the provided host and port
+    main_sync(host=args.host, port=args.port)
 
 
 if __name__ == "__main__":
