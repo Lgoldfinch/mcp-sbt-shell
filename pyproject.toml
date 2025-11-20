@@ -7,7 +7,7 @@ name = "mcp-sbt-server"
 version = "0.1.0"
 description = "MCP server for sbt shell management"
 dependencies = [
-    "mcp>=1.0.0",
+    "fastmcp>=2.13.1",
 ]
 
 [dependency-groups]

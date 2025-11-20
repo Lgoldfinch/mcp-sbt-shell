@@ -24,7 +24,7 @@ Examples:
 
     parser.add_argument("--host", default="localhost", help="Host to bind the server to (default: localhost)")
 
-    parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to (default: 8000)")
+    parser.add_argument("--port", type=int, default=8093, help="Port to bind the server to (default: 8093)")
 
     parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
 
@@ -38,7 +38,7 @@ def main():
     logger.info(f"Starting MCP SBT server with CLI args: host={args.host}, port={args.port}")
 
     # Start the server with the provided host and port
-    main_sync(host=args.host, port=args.port)
+    main_sync(args.host, args.port)
 
 
 if __name__ == "__main__":

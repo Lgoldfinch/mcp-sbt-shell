@@ -2,7 +2,7 @@ import logging
 import signal
 import sys
 
-from mcp.server import FastMCP
+from fastmcp import FastMCP
 
 from .sbt_manager import SbtManager
 
@@ -93,13 +93,14 @@ def restart_sbt() -> str:
     try:
         sbt_manager.restart()
         logger.info("SBT process restarted successfully")
+        logger.info("SBT process restarted successfully")
         return "SBT process restarted successfully"
     except Exception as e:
         logger.error(f"Failed to restart SBT: {e}")
         return f"Failed to restart SBT: {e!s}"
 
 
-def main_sync(host: str = "localhost", port: int = 8000):
+def main_sync(host: str, port: int):
     """Synchronous entry point for the script.
 
     Args:
@@ -109,11 +110,4 @@ def main_sync(host: str = "localhost", port: int = 8000):
     logger.info(f"Starting MCP SBT server with host={host}, port={port}")
     setup_signal_handlers()
 
-    # Try to use SSE transport for HTTP-based communication
-    # Note: FastMCP may not support host/port parameters in all versions
-    try:
-        mcp.run(transport="sse")
-    except (TypeError, ValueError) as e:
-        logger.warning(f"SSE transport not supported: {e}")
-        logger.info("Falling back to default stdio transport")
-        mcp.run()
+    mcp.run(transport="streamable-http", host=host, port=port)
