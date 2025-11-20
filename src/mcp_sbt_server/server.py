@@ -1,5 +1,4 @@
 import logging
-import os
 import signal
 import sys
 from pathlib import Path
@@ -14,7 +13,7 @@ logger = logging.getLogger("mcp_sbt_server")
 mcp = FastMCP("mcp-sbt-server")
 
 # Global SBT manager instance
-sbt_manager = SbtManager()
+sbt_manager = None
 
 
 def setup_logging(log_file=None, log_level="INFO"):
@@ -140,15 +139,22 @@ def restart_sbt() -> str:
         return f"Failed to restart SBT: {e!s}"
 
 
-def main_sync(log_file=None, log_level="INFO"):
+def main_sync(log_file=None, log_level="INFO", sbt_executable=None):
     """Synchronous entry point for the script.
 
     Args:
         log_file: Optional path to log file for output
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+        sbt_executable: Optional path to SBT executable
     """
+    global sbt_manager
+
     # Setup logging first
     setup_logging(log_file=log_file, log_level=log_level)
+
+    # Initialize SBT manager with provided executable
+    sbt_manager = SbtManager(sbt_path=sbt_executable)
+    logger.info(f"Initialized SBT manager with executable: {sbt_executable or 'sbt'}")
 
     logger.info("Starting MCP SBT server")
     setup_signal_handlers()

@@ -9,14 +9,15 @@ logger = logging.getLogger("mcp_sbt_server.sbt_manager")
 
 
 class SbtManager:
-    def __init__(self, timeout: int = 30):
+    def __init__(self, timeout: int = 30, sbt_path: Optional[str] = None):
         self.timeout = timeout
+        self.sbt_path = sbt_path or "sbt"
         self.process: Optional[subprocess.Popen] = None
         self.ready = False
         self._lock = threading.Lock()
         self._output_buffer = []
         self._ready_event = threading.Event()
-        logger.info(f"SBT Manager initialized with timeout={timeout}s")
+        logger.info(f"SBT Manager initialized with timeout={timeout}s, sbt_path={self.sbt_path}")
 
     def start(self) -> None:
         with self._lock:
@@ -24,17 +25,27 @@ class SbtManager:
                 logger.info("SBT process is already running")
                 return
 
-            logger.info("Starting SBT process")
-            self.process = subprocess.Popen(
-                ["sbt", "--no-colors", "--supershell=false"],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=os.getcwd(),
-                bufsize=1,
-                universal_newlines=True,
-            )
+            logger.info(f"Starting SBT process with executable: {self.sbt_path}")
+
+            try:
+                self.process = subprocess.Popen(
+                    [self.sbt_path, "--no-colors", "--supershell=false"],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    cwd=os.getcwd(),
+                    bufsize=1,
+                    universal_newlines=True,
+                )
+            except FileNotFoundError as e:
+                error_msg = f"Failed to start SBT process: {e}\n\nSBT executable not found at: {self.sbt_path}\n\nPlease ensure:\n1. SBT is installed on your system\n2. The path to the SBT executable is correct\n3. The executable has proper permissions"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg) from e
+            except Exception as e:
+                error_msg = f"Failed to start SBT process: {e}"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg) from e
 
             self.ready = False
             self._ready_event.clear()
