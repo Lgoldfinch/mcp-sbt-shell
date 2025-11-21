@@ -19,9 +19,9 @@ class SbtSession:
             stderr=asyncio.subprocess.STDOUT,
             bufsize=0,
         )
-        await self._wait_for_prompt(timeout=30)
+        await self._wait_for_prompt(timeout=60)
 
-    def _is_process_running(self) -> bool:
+    def is_running(self) -> bool:
         return self.process is not None and self.process.returncode is None
 
     async def _wait_for_prompt(self, timeout: int) -> str:
@@ -30,7 +30,7 @@ class SbtSession:
         loop = asyncio.get_event_loop()
         end_time = loop.time() + timeout
 
-        while self._is_process_running():
+        while self.is_running():
             try:
                 remaining_time = end_time - loop.time()
                 if remaining_time <= 0:
@@ -49,14 +49,14 @@ class SbtSession:
 
         await asyncio.sleep(1)
         output = buffer.decode("utf-8", errors="replace")
-        if not self._is_process_running():
+        if not self.is_running():
             raise RuntimeError(
                 f"process terminated with return code: {self.process.returncode}.\n\nsbt output:\n" + output
             )
         raise TimeoutError(f"no prompt detected within {timeout} seconds.\n\nsbt output:\n" + output)
 
     async def _send_command(self, command: str) -> None:
-        if not self._is_process_running():
+        if not self.is_running():
             raise RuntimeError("sbt process is not running")
         try:
             encoded_command = command.encode("ascii")
@@ -66,12 +66,12 @@ class SbtSession:
         self.process.stdin.write(encoded_command + b"\n")
         await self.process.stdin.drain()
 
-    async def execute(self, command: str, timeout: int = 10) -> str:
+    async def execute(self, command: str, timeout: int) -> str:
         await self._send_command(command)
         return await self._wait_for_prompt(timeout)
 
     async def stop(self) -> None:
-        if not self._is_process_running():
+        if not self.is_running():
             return
 
         await self._send_command("exit")
@@ -80,6 +80,10 @@ class SbtSession:
         except asyncio.TimeoutError:
             pass
 
-        if self._is_process_running():
+        if self.is_running():
             self.process.terminate()
             await self.process.wait()
+
+    async def restart(self) -> None:
+        await self.stop()
+        await self.start()

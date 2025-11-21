@@ -1,38 +1,25 @@
-"""CLI entry point for mcp-sbt-server."""
-
 import argparse
+import asyncio
 import os
 
-from .server import main_sync
+from .server import main_async
 
 
-def parse_arguments():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description="MCP server for sbt shell management",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  %(prog)s                                    # Use default sbt in current directory
-  %(prog)s --sbt-executable /usr/local/bin/sbt  # Use custom SBT executable
-  %(prog)s --sbt-executable sbt.bat            # Use sbt.bat on Windows
-  %(prog)s --workdir /path/to/project          # Run sbt commands in specific directory
-  %(prog)s --workdir ./my-scala-project        # Run sbt commands in relative directory
-        """,
-    )
+def parse_args():
+    parser = argparse.ArgumentParser(description="MCP server for sbt shell management")
 
     parser.add_argument(
         "--sbt-executable",
         type=str,
         default="sbt.bat",
-        help="Path to the SBT executable (e.g., sbt, sbt.bat, or full path to executable)",
+        help="path to the sbt executable",
     )
 
     parser.add_argument(
-        "--workdir",
+        "--cwd",
         type=str,
         default=os.getcwd(),
-        help="Working directory where sbt commands will be executed (default: current directory)",
+        help="working directory where sbt commands will be executed",
     )
 
     return parser.parse_args()
@@ -40,10 +27,8 @@ Examples:
 
 def main():
     """Main entry point for the CLI."""
-    args = parse_arguments()
-
-    # Start the server with parsed arguments
-    main_sync(sbt_executable=args.sbt_executable, workdir=args.workdir)
+    args = parse_args()
+    asyncio.run(main_async(sbt_executable=args.sbt_executable, cwd=args.cwd))
 
 
 if __name__ == "__main__":
