@@ -6,7 +6,7 @@ from .server import main_async
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="MCP server for sbt shell management")
+    parser = argparse.ArgumentParser(description="MCP server for executing commands in sbt shell")
 
     parser.add_argument(
         "--sbt-executable",

@@ -3,9 +3,9 @@ requires = ["uv_build>=0.9.10,<0.10.0"]
 build-backend = "uv_build"
 
 [project]
-name = "mcp-sbt-server"
+name = "mcp-sbt-shell"
 version = "0.1.0"
-description = "MCP server for sbt shell management"
+description = "MCP server for executing commands in sbt shell"
 dependencies = [
     "fastmcp>=2.13.1",
 ]
@@ -16,7 +16,7 @@ dev = [
 ]
 
 [project.scripts]
-mcp_sbt_server = "mcp_sbt_server.__main__:main"
+mcp_sbt_shell = "mcp_sbt_shell.__main__:main"
 
 [tool.ruff]
 line-length = 120

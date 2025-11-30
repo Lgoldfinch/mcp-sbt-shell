@@ -2,7 +2,7 @@ from fastmcp import FastMCP
 
 from .sbt_session import SbtSession
 
-mcp = FastMCP("mcp-sbt-server")
+mcp = FastMCP("mcp-sbt-shell")
 sbt_session = None
 _timeout = None
 
