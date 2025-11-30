@@ -22,13 +22,17 @@ def parse_args():
         help="working directory where sbt commands will be executed",
     )
 
+    parser.add_argument("-p", "--port", type=int, default="8080", help="port to use")
+
+    parser.add_argument("-T", "--timeout", type=int, default=30, help="sbt_execute timeout")
+
     return parser.parse_args()
 
 
 def main():
     """Main entry point for the CLI."""
     args = parse_args()
-    asyncio.run(main_async(sbt_executable=args.sbt_executable, cwd=args.cwd))
+    asyncio.run(main_async(sbt_executable=args.sbt_executable, cwd=args.cwd, port=args.port, timeout=args.timeout))
 
 
 if __name__ == "__main__":
