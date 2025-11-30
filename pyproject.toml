@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "mcp-sbt-shell"
 version = "0.1.0"
-description = "MCP server for executing commands in sbt shell"
+description = "An MCP server for executing commands in a persistent sbt shell session"
 dependencies = [
     "fastmcp>=2.13.1",
 ]
