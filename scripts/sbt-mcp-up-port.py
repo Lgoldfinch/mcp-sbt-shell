@@ -22,6 +22,10 @@ import re
 import socket
 import sys
 
+if len(sys.argv) != 2:
+    sys.stderr.write("Usage: sbt-mcp-up-port.py <worktree>\n")
+    sys.exit(2)
+
 worktree = os.path.abspath(sys.argv[1])
 mcp_path = os.path.join(worktree, ".mcp.json")
 NAME = "mcp-sbt-shell"
