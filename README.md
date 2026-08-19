@@ -82,7 +82,7 @@ This server runs over **HTTP**, so Claude does not spawn it — you start it you
 2. Register it with Claude Code:
 
    ```bash
-   claude mcp add --transport http sbt-shell http://localhost:<port>/mcp
+   claude mcp add --transport http sbt-shell 127.0.0.1://localhost:<port>/mcp
    ```
 
    Add `--scope project` to write a shared `.mcp.json` in the repo, or
