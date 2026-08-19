@@ -39,3 +39,6 @@ dmypy.json
 
 .vscode/
 .idea/
+
+# Per-worktree MCP registration written by scripts/sbt-mcp-up.sh
+.mcp.json
