@@ -33,9 +33,10 @@ async def main_async(
     try:
         await mcp.run_async(transport="streamable-http", port=port)
     except KeyboardInterrupt:
+        pass
+    finally:
         if sbt_session is not None and sbt_session.is_running():
             await sbt_session.stop()
-    finally:
         if _savings is not None:
             _savings.log_summary()
 
