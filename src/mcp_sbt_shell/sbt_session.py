@@ -27,7 +27,7 @@ class SbtSession:
     async def _wait_for_prompt(self, timeout: int) -> str:
         buffer = b""
         prompt_len = len(self.prompt)
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         end_time = loop.time() + timeout
 
         while self.is_running():

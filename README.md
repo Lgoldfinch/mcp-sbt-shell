@@ -23,7 +23,9 @@ that signals the end of command execution.
   messages, `[error]`/`[warn]`) inline, so the model still sees *why* a test
   failed. On the failure path it also: drops framework/runtime stack frames
   (keeping the project frame that matters — see `--keep-frame-prefixes`),
-  deduplicates identical traces across failures (`(same trace as "…")`), prepends
+  compacts project frames that repeat a source location (ScalaTest lifecycle
+  overrides all report the test class's declaration line), deduplicates identical
+  traces across failures (`(same trace as "…")`), prepends
   a one-line recompile-status header (`compiled: N sources` / `no recompile
   (cached)`) so you can tell a fresh result from a cached one, and strips the
   low-value `[info]` prefix.

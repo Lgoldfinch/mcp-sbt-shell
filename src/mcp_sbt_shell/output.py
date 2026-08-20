@@ -62,6 +62,9 @@ _COMPILING_RE = re.compile(r"compiling (\d+) Scala sources?")
 # Commands for which a "no recompile (cached)" note is meaningful.
 _COMPILE_CMD_RE = re.compile(r"\b(compile|test)", re.IGNORECASE)
 
+# The ``(File.scala:NN)`` source location at the tail of a stack frame.
+_FRAME_LOC_RE = re.compile(r"\(([^()]*\.scala:\d+)\)\s*$")
+
 
 def strip_ansi(text: str) -> str:
     """Remove ANSI/terminal control sequences that survive ``--no-colors``."""
@@ -85,12 +88,9 @@ def collapse_carriage_returns(text: str) -> str:
 def strip_command_echo(text: str, command: str) -> str:
     """Drop the leading line where sbt echoes back the command we sent."""
     lines = text.split("\n")
-    for i, line in enumerate(lines):
-        if line.strip() == "":
-            continue
-        if line.strip() == command.strip():
-            del lines[i]
-        break
+    first_non_blank = next((i for i, line in enumerate(lines) if line.strip() != ""), None)
+    if first_non_blank is not None and lines[first_non_blank].strip() == command.strip():
+        del lines[first_non_blank]
     return "\n".join(lines)
 
 
@@ -167,11 +167,41 @@ def _failure_test_name(header_content: str) -> str:
     return name.strip().lstrip("-").strip()
 
 
+def _frame_location(line: str) -> str | None:
+    """Return the ``File.scala:NN`` a frame points at, or ``None`` if unparseable."""
+    m = _FRAME_LOC_RE.search(line)
+    return m.group(1) if m else None
+
+
+def _compact_frames(frame_lines: list[str]) -> tuple[list[str], int]:
+    """Drop project frames that repeat a source location already shown.
+
+    ScalaTest's FreeSpec lifecycle overrides (withFixture/runTest/runTests/run)
+    all report the test class's declaration line, so one trace carries the same
+    ``File.scala:NN`` many times. Keep the first occurrence of each location and
+    elide the rest; frames with no parseable location are always kept. Returns
+    ``(kept_frames, dropped_count)``.
+    """
+    seen: set[str] = set()
+    kept: list[str] = []
+    dropped = 0
+    for line in frame_lines:
+        loc = _frame_location(line)
+        if loc is not None and loc in seen:
+            dropped += 1
+            continue
+        if loc is not None:
+            seen.add(loc)
+        kept.append(line)
+    return kept, dropped
+
+
 def apply_aggressive(text: str, keep_frame_prefixes: tuple[str, ...]) -> tuple[str, int]:
     """ScalaTest-aware filter: keep failure signal, drop passing-suite chatter.
 
     Failure blocks are segmented so framework stack frames can be dropped (change
-    1) and identical traces deduplicated across failures (change 2). Returns
+    1), project frames repeating a source location are compacted, and identical
+    traces are deduplicated across failures (change 2). Returns
     ``(filtered_text, dropped_line_count)``.
     """
     kept: list[str] = []
@@ -185,21 +215,24 @@ def apply_aggressive(text: str, keep_frame_prefixes: tuple[str, ...]) -> tuple[s
     block_items: list[tuple[str, str]] = []
 
     def flush_block() -> None:
-        nonlocal block_header, block_name, block_items
+        nonlocal block_header, block_name, block_items, dropped
         if block_header is None:
             return
         kept.append(block_header)
         frame_lines = [line for kind, line in block_items if kind == "frame"]
+        frame_lines, dropped_frames = _compact_frames(frame_lines)
+        dropped += dropped_frames
         sig = tuple(line.strip() for line in frame_lines)
+        # Frames sit contiguously at the block tail; emit messages then frames.
+        msgs = [line for kind, line in block_items if kind == "msg"]
         if sig and sig in seen_traces:
-            for kind, line in block_items:
-                if kind == "msg":
-                    kept.append(line)
+            kept.extend(msgs)
             kept.append(f'  (same trace as "{seen_traces[sig]}")')
         else:
             if sig:
                 seen_traces[sig] = block_name
-            kept.extend(line for _, line in block_items)
+            kept.extend(msgs)
+            kept.extend(frame_lines)
         block_header = None
         block_name = ""
         block_items = []

@@ -1,0 +1,277 @@
+kerneltests/testOnly com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest
+[info] Futhark library up to date: european_mc
+[info] Futhark library up to date: trinomial_tree
+[info] Futhark library up to date: asian_mc
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/utils/extensions/target/scala-2.13/classes ...
+[info] Compiling 29 protobuf files to /Users/louis/git/topaztech/topaz-d/datamodels/publicapi/grpc/target/scala-2.13/src_managed/main
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.AggregateService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.BookCloseService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.MarketDataService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.MetadataService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.RefDataService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.PivotReportService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.PivotMarketDataService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.ReportDiffingService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.ValuerService
+[info] Generating Apache Pekko gRPC service interface for com.topaz.grpc.service.v1.ValuerDataService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.AggregateService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.BookCloseService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.MarketDataService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.MetadataService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.RefDataService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.PivotReportService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.PivotMarketDataService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.ReportDiffingService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.ValuerService
+[info] Generating Apache Pekko gRPC client for com.topaz.grpc.service.v1.ValuerDataService
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/utils/utilities/target/scala-2.13/classes ...
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.AggregateService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.BookCloseService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.MarketDataService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.MetadataService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.RefDataService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.PivotReportService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.PivotMarketDataService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.ReportDiffingService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.ValuerService
+[info] Generating Apache Pekko gRPC service handler for com.topaz.grpc.service.v1.ValuerDataService
+[info] compiling 18 Scala sources to /Users/louis/git/topaztech/topaz-d/time/time/target/scala-2.13/classes ...
+[info] compiling 22 Scala sources to /Users/louis/git/topaztech/topaz-d/time/time/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/refdata/refdata/target/scala-2.13/classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/refdata/richrefdata/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/refdata/richrefdata/target/scala-2.13/test-classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/datamodels/tradedata/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/datamodels/pivotdata/target/scala-2.13/classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/instrument/target/scala-2.13/classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/instrument/target/scala-2.13/classes ...
+[info] compiling 5 Scala sources to /Users/louis/git/topaztech/topaz-d/instrument/target/scala-2.13/test-classes ...
+[info] compiling 19 Scala sources to /Users/louis/git/topaztech/topaz-d/instrument/target/scala-2.13/test-classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/pivotdata/target/scala-2.13/classes ...
+[info] compiling 23 Scala sources to /Users/louis/git/topaztech/topaz-d/valuation/valuation/target/scala-2.13/classes ...
+[info] compiling 18 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/pivotreport/target/scala-2.13/classes ...
+[info] compiling 371 Scala sources to /Users/louis/git/topaztech/topaz-d/valuation/valuation/target/scala-2.13/classes ...
+[info] compiling 4 Scala sources to /Users/louis/git/topaztech/topaz-d/valuation/valuation/target/scala-2.13/test-classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/reportdata/target/scala-2.13/classes ...
+[info] compiling 15 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/pivotreport/target/scala-2.13/test-classes ...
+[info] compiling 4 Scala sources to /Users/louis/git/topaztech/topaz-d/clientstate/target/scala-2.13/classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/clientstate/target/scala-2.13/classes ...
+[info] compiling 4 Scala sources to /Users/louis/git/topaztech/topaz-d/clientstate/target/scala-2.13/test-classes ...
+[info] compiling 5 Scala sources to /Users/louis/git/topaztech/topaz-d/sprayjson/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/businesstore/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/businesstore/target/scala-2.13/test-classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/tradepivot/tradepivot/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/stores/clientstate/target/scala-2.13/test-classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/tradepivot/tradepivot/target/scala-2.13/test-classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/tradepivot/data/target/scala-2.13/classes ...
+[info] compiling 4 Scala sources to /Users/louis/git/topaztech/topaz-d/restapi/target/scala-2.13/classes ...
+[info] compiling 5 Scala sources to /Users/louis/git/topaztech/topaz-d/stores/dbstores/target/scala-2.13/classes ...
+[info] compiling 9 Scala sources to /Users/louis/git/topaztech/topaz-d/tradepivot/tradepivotreport/target/scala-2.13/classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/stores/dbstores/target/scala-2.13/test-classes ...
+[info] compiling 4 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/base/target/scala-2.13/classes ...
+[info] compiling 7 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/publicapi/grpc/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/kernel/table/target/scala-2.13/classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/stores/eventstores/target/scala-2.13/test-classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/httpservice/target/scala-2.13/test-classes ...
+[info] compiling 11 Scala sources to /Users/louis/git/topaztech/topaz-d/datamodels/publicapi/grpc/target/scala-2.13/classes ...
+[info] compiling 6 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/asset/target/scala-2.13/classes ...
+[info] compiling 11 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/refdata/target/scala-2.13/classes ...
+[info] compiling 2 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/marketdata/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/tradepivot/tradepivotreport/target/scala-2.13/test-classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/cluster/target/scala-2.13/classes ...
+[info] compiling 30 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/pivot/target/scala-2.13/classes ...
+[info] compiling 3 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/kernel/target/scala-2.13/classes ...
+[info] compiling 1 Scala source to /Users/louis/git/topaztech/topaz-d/kernel/kernel/target/scala-2.13/test-classes ...
+[info] compiling 60 Scala sources to /Users/louis/git/topaztech/topaz-d/kernel/unittests/target/scala-2.13/test-classes ...
+WARNING: package jdk.jfr.internal.handlers not in jdk.jfr
+WARNING: package jdk.internal.util.jar not in java.base
+[info] FuturesExpiriesTableBuilderTest:
+[info] - view futures and swap futures expiries (584 milliseconds)
+[info] - futures expiries should populate expiry data for markets that have expiry rules but no futures monthly expiry overrides (4 milliseconds)
+[info] - swap futures expiries should populate expiry data for markets that have expiry rules but no futures monthly expiry overrides (1 millisecond)
+[info] - swap futures option expiries derived from the market default show the Market Default source (2 milliseconds)
+[info] - When a market has uploaded expiries and expiry rules, the uploaded expiries should supersede expiry rules *** FAILED *** (4 milliseconds)
+[info]   Expected
+[info]                           ||                                Contract Expiry                              $
+[info]                           ||                                   CBOT Corn                                 $
+[info]   Month   | Expiry Source || Calendar Spread Option Expiries | Futures Expiries | Futures Option Expiries$
+[info]   ------------------------||-----------------------------------------------------------------------------$
+[info]   2018-01 |         Rules ||                                 |       2018-01-31 |                        $
+[info]           |      Uploaded ||                      2017-12-22 |                  |              2017-12-22$
+[info]   2018-02 |         Rules ||                                 |       2018-02-28 |                        $
+[info]           |      Uploaded ||                      2018-01-26 |                  |              2018-01-26$
+[info]   2018-03 |      Uploaded ||                      2018-02-23 |       2018-03-14 |              2018-02-23$
+[info]   Actual
+[info]     """|                        ||                                Contract Expiry                              $
+[info]        |                        ||                                   CBOT Corn                                 $
+[info]        |Month   | Expiry Source || Calendar Spread Option Expiries | Futures Expiries | Futures Option Expiries$
+[info]        |------------------------||-----------------------------------------------------------------------------$
+[info]        |2018-01 |             B ||                      2017-12-22 |                  |              2017-12-22$
+[info]        |        |         Rules ||                                 |       2018-01-31 |                        $
+[info]        |2018-02 |             B ||                      2018-01-26 |                  |              2018-01-26$
+[info]        |        |         Rules ||                                 |       2018-02-28 |                        $
+[info]        |2018-03 |             B ||                      2018-02-23 |       2018-03-14 |              2018-02-23$"""
+[info]   "[B]" was not equal to "[Rules]" (PivotReportsComparator.scala:123)
+[info]   Analysis:
+[info]   "[B]" -> "[Rules]"
+[info]   org.scalatest.exceptions.TestFailedException:
+[info]   at org.scalatest.matchers.MatchersHelper$.indicateFailure(MatchersHelper.scala:397)
+[info]   at org.scalatest.matchers.should.Matchers$ShouldMethodHelperClass.shouldMatcher(Matchers.scala:7299)
+[info]   at org.scalatest.matchers.should.Matchers$AnyShouldWrapper.should(Matchers.scala:7347)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkTermConsistentWithFormattedValue(PivotReportsComparator.scala:123)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkTermConsistentWithPivotValue(PivotReportsComparator.scala:111)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$5(PivotReportsComparator.scala:280)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$5$adapted(PivotReportsComparator.scala:276)
+[info]   at scala.collection.immutable.Vector.foreach(Vector.scala:2125)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$1(PivotReportsComparator.scala:276)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$1$adapted(PivotReportsComparator.scala:256)
+[info]   at scala.collection.immutable.Vector.foreach(Vector.scala:2125)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.compareTableValues(PivotReportsComparator.scala:256)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$checkReportConsistentWithText$1(PivotReportsComparator.scala:481)
+[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+[info]   at org.scalatest.Assertions.withClue(Assertions.scala:1065)
+[info]   at org.scalatest.Assertions.withClue$(Assertions.scala:1052)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.com$topaz$utils$ScalaTestExtensions$$super$withClue(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.utils.ScalaTestExtensions.withClue(ScalaTestExtensions.scala:58)
+[info]   at com.topaz.utils.ScalaTestExtensions.withClue$(ScalaTestExtensions.scala:56)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.withClue(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkReportConsistentWithText(PivotReportsComparator.scala:478)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkReportConsistentWithText$(PivotReportsComparator.scala:469)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.checkReportConsistentWithText(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.$anonfun$new$5(FuturesExpiriesTableBuilderTest.scala:218)
+[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+[info]   at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+[info]   at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+[info]   at org.scalatest.Transformer.apply(Transformer.scala:22)
+[info]   at org.scalatest.Transformer.apply(Transformer.scala:20)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike$$anon$1.apply(AnyFreeSpecLike.scala:437)
+[info]   at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
+[info]   at org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.withFixture(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.invokeWithFixture$1(AnyFreeSpecLike.scala:435)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTest$1(AnyFreeSpecLike.scala:447)
+[info]   at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTest(AnyFreeSpecLike.scala:447)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTest$(AnyFreeSpecLike.scala:429)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.runTest(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTests$1(AnyFreeSpecLike.scala:506)
+[info]   at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:413)
+[info]   at scala.collection.immutable.List.foreach(List.scala:323)
+[info]   at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
+[info]   at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
+[info]   at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTests(AnyFreeSpecLike.scala:506)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTests$(AnyFreeSpecLike.scala:505)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.runTests(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.Suite.run(Suite.scala:1114)
+[info]   at org.scalatest.Suite.run$(Suite.scala:1096)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.org$scalatest$freespec$AnyFreeSpecLike$$super$run(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$run$1(AnyFreeSpecLike.scala:550)
+[info]   at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.run(AnyFreeSpecLike.scala:550)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.run$(AnyFreeSpecLike.scala:549)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.run(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+[info]   at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:517)
+[info]   at sbt.ForkMain$Run.lambda$runTest$1(ForkMain.java:414)
+[info]   at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+[info]   at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+[info]   at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+[info]   at java.base/java.lang.Thread.run(Thread.java:1474)
+[info] - months with uploaded expiries show Uploaded source, months without uploaded expiries show rule-based source *** FAILED *** (3 milliseconds)
+[info]   Expected
+[info]                           ||                                Contract Expiry                              $
+[info]                           ||                                   CBOT Corn                                 $
+[info]   Month   | Expiry Source || Calendar Spread Option Expiries | Futures Expiries | Futures Option Expiries$
+[info]   ------------------------||-----------------------------------------------------------------------------$
+[info]   2018-01 |         Rules ||                      2018-01-07 |                  |              2018-01-10$
+[info]           |      Uploaded ||                                 |       2018-01-12 |                        $
+[info]   2018-02 |         Rules ||                      2018-02-23 |       2018-02-28 |              2018-02-26$
+[info]   Actual
+[info]     """|                        ||                                Contract Expiry                              $
+[info]        |                        ||                                   CBOT Corn                                 $
+[info]        |Month   | Expiry Source || Calendar Spread Option Expiries | Futures Expiries | Futures Option Expiries$
+[info]        |------------------------||-----------------------------------------------------------------------------$
+[info]        |2018-01 |             B ||                                 |       2018-01-12 |                        $
+[info]        |        |         Rules ||                      2018-01-07 |                  |              2018-01-10$
+[info]        |2018-02 |         Rules ||                      2018-02-23 |       2018-02-28 |              2018-02-26$"""
+[info]   "[B]" was not equal to "[Rules]" (PivotReportsComparator.scala:123)
+[info]   Analysis:
+[info]   "[B]" -> "[Rules]"
+[info]   org.scalatest.exceptions.TestFailedException:
+[info]   at org.scalatest.matchers.MatchersHelper$.indicateFailure(MatchersHelper.scala:397)
+[info]   at org.scalatest.matchers.should.Matchers$ShouldMethodHelperClass.shouldMatcher(Matchers.scala:7299)
+[info]   at org.scalatest.matchers.should.Matchers$AnyShouldWrapper.should(Matchers.scala:7347)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkTermConsistentWithFormattedValue(PivotReportsComparator.scala:123)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkTermConsistentWithPivotValue(PivotReportsComparator.scala:111)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$5(PivotReportsComparator.scala:280)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$5$adapted(PivotReportsComparator.scala:276)
+[info]   at scala.collection.immutable.Vector.foreach(Vector.scala:2125)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$1(PivotReportsComparator.scala:276)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$compareTableValues$1$adapted(PivotReportsComparator.scala:256)
+[info]   at scala.collection.immutable.Vector.foreach(Vector.scala:2125)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.compareTableValues(PivotReportsComparator.scala:256)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.$anonfun$checkReportConsistentWithText$1(PivotReportsComparator.scala:481)
+[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+[info]   at org.scalatest.Assertions.withClue(Assertions.scala:1065)
+[info]   at org.scalatest.Assertions.withClue$(Assertions.scala:1052)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.com$topaz$utils$ScalaTestExtensions$$super$withClue(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.utils.ScalaTestExtensions.withClue(ScalaTestExtensions.scala:58)
+[info]   at com.topaz.utils.ScalaTestExtensions.withClue$(ScalaTestExtensions.scala:56)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.withClue(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkReportConsistentWithText(PivotReportsComparator.scala:478)
+[info]   at com.topaz.pivot.report.PivotReportsComparator.checkReportConsistentWithText$(PivotReportsComparator.scala:469)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.checkReportConsistentWithText(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.$anonfun$new$6(FuturesExpiriesTableBuilderTest.scala:265)
+[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+[info]   at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+[info]   at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+[info]   at org.scalatest.Transformer.apply(Transformer.scala:22)
+[info]   at org.scalatest.Transformer.apply(Transformer.scala:20)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike$$anon$1.apply(AnyFreeSpecLike.scala:437)
+[info]   at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
+[info]   at org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.withFixture(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.invokeWithFixture$1(AnyFreeSpecLike.scala:435)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTest$1(AnyFreeSpecLike.scala:447)
+[info]   at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTest(AnyFreeSpecLike.scala:447)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTest$(AnyFreeSpecLike.scala:429)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.runTest(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTests$1(AnyFreeSpecLike.scala:506)
+[info]   at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:413)
+[info]   at scala.collection.immutable.List.foreach(List.scala:323)
+[info]   at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
+[info]   at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
+[info]   at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTests(AnyFreeSpecLike.scala:506)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.runTests$(AnyFreeSpecLike.scala:505)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.runTests(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.Suite.run(Suite.scala:1114)
+[info]   at org.scalatest.Suite.run$(Suite.scala:1096)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.org$scalatest$freespec$AnyFreeSpecLike$$super$run(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$run$1(AnyFreeSpecLike.scala:550)
+[info]   at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.run(AnyFreeSpecLike.scala:550)
+[info]   at org.scalatest.freespec.AnyFreeSpecLike.run$(AnyFreeSpecLike.scala:549)
+[info]   at com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest.run(FuturesExpiriesTableBuilderTest.scala:24)
+[info]   at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+[info]   at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:517)
+[info]   at sbt.ForkMain$Run.lambda$runTest$1(ForkMain.java:414)
+[info]   at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+[info]   at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+[info]   at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+[info]   at java.base/java.lang.Thread.run(Thread.java:1474)
+[info] - view futures expiries should be empty if there's no expiry rules data and no expiry overrides (3 milliseconds)
+[info] - view futures should return an error message in the header if it cannot find a futures market (3 milliseconds)
+[info] - view futures should return an error message in the header if it cannot find an exchange (3 milliseconds)
+[info] Run completed in 2 seconds, 294 milliseconds.
+[info] Total number of tests run: 9
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 7, failed 2, canceled 0, ignored 0, pending 0
+[info] *** 2 TESTS FAILED ***
+[error] Failed tests:
+[error]         com.topaz.kernel.pivot.FuturesExpiriesTableBuilderTest
+[error] (kerneltests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 113 s (0:01:53.0), completed 20 Aug 2026, 11:04:41
