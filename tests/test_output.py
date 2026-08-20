@@ -257,6 +257,17 @@ def test_real_capture_retains_all_signal():
     assert "[error] Failed tests:" in out
 
 
+def test_real_capture_compacts_repeated_source_locations():
+    out = _clean_real(keep_frame_prefixes=())
+    # the FreeSpec lifecycle overrides all report the class declaration line (:24);
+    # each trace keeps only the first, so at most one per failure survives (<= 2).
+    assert out.count("FuturesExpiriesTableBuilderTest.scala:24)") <= 2
+    # but the distinct, useful project locations are never dropped
+    assert "FuturesExpiriesTableBuilderTest.scala:218" in out
+    assert "FuturesExpiriesTableBuilderTest.scala:265" in out
+    assert "PivotReportsComparator.scala:123" in out
+
+
 def test_real_capture_drops_framework_and_preamble():
     out = _clean_real(keep_frame_prefixes=())
     for noise in (

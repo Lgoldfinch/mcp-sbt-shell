@@ -5,7 +5,7 @@ import os
 from .server import main_async
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="MCP server for executing commands in sbt shell")
 
     parser.add_argument(
@@ -58,7 +58,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Main entry point for the CLI."""
     args = parse_args()
     asyncio.run(
