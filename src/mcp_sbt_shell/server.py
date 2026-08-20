@@ -9,6 +9,7 @@ sbt_session = None
 _timeout = None
 _aggressive = False
 _collapse_success = False
+_keep_frame_prefixes: tuple[str, ...] = ()
 _savings = None
 
 
@@ -20,12 +21,14 @@ async def main_async(
     aggressive: bool,
     collapse_success: bool,
     count_tokens: bool,
+    keep_frame_prefixes: tuple[str, ...],
 ):
-    global sbt_session, _timeout, _aggressive, _collapse_success, _savings
+    global sbt_session, _timeout, _aggressive, _collapse_success, _keep_frame_prefixes, _savings
     sbt_session = SbtSession(executable=sbt_executable, cwd=cwd)
     _timeout = timeout
     _aggressive = aggressive
     _collapse_success = collapse_success
+    _keep_frame_prefixes = keep_frame_prefixes
     if count_tokens:
         count_fn, source = make_counter()
         _savings = SavingsTracker(count_fn, source)
@@ -74,6 +77,7 @@ async def sbt_execute(command: str, raw: bool) -> str:
                 command=command,
                 aggressive=_aggressive,
                 collapse_success_enabled=_collapse_success,
+                keep_frame_prefixes=_keep_frame_prefixes,
             )
         )
         if _savings is not None:

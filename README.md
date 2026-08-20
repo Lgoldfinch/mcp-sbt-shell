@@ -21,7 +21,12 @@ that signals the end of command execution.
 - **`--aggressive` filtering.** A ScalaTest-aware filter that drops noise, such as compilation status and test successes, 
   while keeping failure detail (`*** FAILED ***` blocks, assertion
   messages, `[error]`/`[warn]`) inline, so the model still sees *why* a test
-  failed.
+  failed. On the failure path it also: drops framework/runtime stack frames
+  (keeping the project frame that matters — see `--keep-frame-prefixes`),
+  deduplicates identical traces across failures (`(same trace as "…")`), prepends
+  a one-line recompile-status header (`compiled: N sources` / `no recompile
+  (cached)`) so you can tell a fresh result from a cached one, and strips the
+  low-value `[info]` prefix.
 - **`--collapse-success`.** A clean run collapses to a terse one-line summary
   plus any warnings.
 
@@ -69,6 +74,12 @@ directory, add `--cwd /path/to/your/scala-project`.
   by default)
 - `--collapse-success`: collapse a successful run to a terse one-line summary (off
   by default)
+- `--keep-frame-prefixes`: comma-separated class prefixes whose stack frames are
+  always kept in `--aggressive` mode, even if they match a framework package
+  (e.g. `com.topaz.`). Framework frames (`org.scalatest`/`scala.`/`java.`/`jdk.`/`sbt.`)
+  are dropped by default; everything else is kept, so this is only needed to
+  force-keep a frame that would otherwise be treated as framework noise. Empty by
+  default.
 - `--count-tokens`: testing aid — log per-call and cumulative token savings to
   stderr (off by default). Uses Anthropic's `count_tokens` when
   `ANTHROPIC_API_KEY` is set, otherwise a rough `char/4` proxy.

@@ -63,11 +63,46 @@ TEST_RED = (
     + PROMPT
 )
 
+# Two ScalaTest failures sharing an identical stack trace, each buried under
+# ~4 framework/runtime frames (org.scalatest / scala.runtime / java.base). Models
+# the real waste: the only frame that matters is the single com.topaz project
+# line. Also carries recurring env preamble that should be dropped.
+TEST_RED_MULTI = (
+    "testOnly com.topaz.ReportTest\n"
+    "Futhark library up to date: 1.2.3\n"
+    "WARNING: package com.sun.something not in java.base\n"
+    "[info] compiling 2 Scala sources to /proj/target/scala-2.13/classes ...\n"
+    "[info] done compiling\n"
+    "[info] ReportTest:\n"
+    "[info] - view forward monthly expiries *** FAILED *** (334 milliseconds)\n"
+    "[info]   1 did not equal 3 (PivotReportsComparator.scala:140)\n"
+    "[info]   org.scalatest.exceptions.TestFailedException: 1 did not equal 3\n"
+    "[info]   at org.scalatest.matchers.MatchersHelper$.indicateFailure(MatchersHelper.scala:397)\n"
+    "[info]   at com.topaz.ReportTest.$anonfun$new$1(ReportTest.scala:60)\n"
+    "[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)\n"
+    "[info]   at java.base/java.lang.Thread.run(Thread.java:1474)\n"
+    "[info] - view forward quarterly expiries *** FAILED *** (210 milliseconds)\n"
+    "[info]   2 did not equal 4 (PivotReportsComparator.scala:140)\n"
+    "[info]   org.scalatest.exceptions.TestFailedException: 2 did not equal 4\n"
+    "[info]   at org.scalatest.matchers.MatchersHelper$.indicateFailure(MatchersHelper.scala:397)\n"
+    "[info]   at com.topaz.ReportTest.$anonfun$new$1(ReportTest.scala:60)\n"
+    "[info]   at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)\n"
+    "[info]   at java.base/java.lang.Thread.run(Thread.java:1474)\n"
+    "[info] Run completed in 1 second.\n"
+    "[info] Total number of tests run: 5\n"
+    "[info] Tests: succeeded 3, failed 2\n"
+    "[error] Failed tests:\n"
+    "[error]     com.topaz.ReportTest\n"
+    "[error] (Test / test) sbt.TestsFailedException: Tests unsuccessful\n"
+    + PROMPT
+)
+
 ALL = {
     "compile-clean": COMPILE_CLEAN,
     "compile-fail": COMPILE_FAIL,
     "test-green": TEST_GREEN,
     "test-red": TEST_RED,
+    "test-red-multi": TEST_RED_MULTI,
 }
 
 # The command each fixture was produced by (needed for command-echo stripping).
@@ -76,4 +111,5 @@ COMMANDS = {
     "compile-fail": "compile",
     "test-green": "test",
     "test-red": "testOnly com.example.FooSpec",
+    "test-red-multi": "testOnly com.topaz.ReportTest",
 }
