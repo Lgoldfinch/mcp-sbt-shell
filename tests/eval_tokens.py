@@ -12,34 +12,11 @@ Char counts are only a proxy — trust the API counts for real decisions.
 """
 
 import argparse
-import os
 
 from mcp_sbt_shell.output import clean_output
+from mcp_sbt_shell.token_counter import make_counter
 
 from . import fixtures
-
-_MODEL = "claude-opus-4-8"
-
-
-def _make_counter():
-    key = os.environ.get("ANTHROPIC_API_KEY")
-    if not key:
-        return (lambda text: max(1, len(text) // 4)), "char/4 proxy (no ANTHROPIC_API_KEY)"
-    try:
-        import anthropic
-    except ImportError:
-        return (lambda text: max(1, len(text) // 4)), "char/4 proxy (anthropic not installed)"
-
-    client = anthropic.Anthropic(api_key=key)
-
-    def count(text: str) -> int:
-        resp = client.messages.count_tokens(
-            model=_MODEL,
-            messages=[{"role": "user", "content": text or " "}],
-        )
-        return resp.input_tokens
-
-    return count, f"Anthropic token counter ({_MODEL})"
 
 
 def _modes(name: str) -> dict[str, str]:
@@ -69,7 +46,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    count, source = _make_counter()
+    count, source = make_counter()
     print(f"Token source: {source}\n")
 
     header = f"{'fixture':<14} {'raw':>7} {'safe':>7} {'aggressive':>11} {'collapse':>9}"

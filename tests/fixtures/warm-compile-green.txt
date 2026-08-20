@@ -1,0 +1,14 @@
+[info] welcome to sbt 1.12.13 (Azul Systems, Inc. Java 25.0.3)
+[info] loading global plugins from /Users/louis/.sbt/1.0/plugins
+[info] loading settings for project topaz-d-build from license.sbt, plugins.sbt, protoc.sbt...
+[info] loading project definition from /Users/louis/git/topaztech/topaz-d/project
+[info] loading settings for project topaz-d from build.sbt...
+[info] resolving key references (134419 settings) ...
+[info] set current project to topaz-d (in build file:/Users/louis/git/topaztech/topaz-d/)
+[info] sbt server started at local:///Users/louis/.sbt/1.0/server/0795a9d565e4f4f301e6/sock
+[info] started sbt server
+[?2004h>....[success] Total time: 0 s, completed 16 Aug 2026, 14:53:39
+[?2004h>....[info] compiling 31 Scala sources to /Users/louis/git/topaztech/topaz-d/quantity/target/scala-2.13/classes ...
+[info] done compiling
+[success] Total time: 5 s, completed 16 Aug 2026, 14:53:44
+[?2004h>....[info] shutting down sbt server

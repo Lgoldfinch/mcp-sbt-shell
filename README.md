@@ -23,7 +23,9 @@ that signals the end of command execution.
   messages, `[error]`/`[warn]`) inline, so the model still sees *why* a test
   failed. On the failure path it also: drops framework/runtime stack frames
   (keeping the project frame that matters — see `--keep-frame-prefixes`),
-  deduplicates identical traces across failures (`(same trace as "…")`), prepends
+  compacts project frames that repeat a source location (ScalaTest lifecycle
+  overrides all report the test class's declaration line), deduplicates identical
+  traces across failures (`(same trace as "…")`), prepends
   a one-line recompile-status header (`compiled: N sources` / `no recompile
   (cached)`) so you can tell a fresh result from a cached one, and strips the
   low-value `[info]` prefix.
@@ -50,11 +52,28 @@ uv run --project /path/to/topaz mcp-sbt-shell
 uv tool install /path/to/mcp-sbt-shell
 ```
 
-See section Multiple mcp-sbt-shells section for details on the quickest way to get mcp sbt servers up and running.  
+### Using sbt-mcp-up (Recommended)
 
-### Basic Usage
+The easiest way to run the server is with `sbt-mcp-up`, which automates port assignment and `.mcp.json` setup:
 
-Once installed with `uv tool install`, start the server with default settings:
+```bash
+ln -s "$(pwd)/scripts/sbt-mcp-up.sh" ~/.local/bin/sbt-mcp-up
+```
+
+Then, in any Scala project:
+
+```bash
+sbt-mcp-up                                # start server for current project
+sbt-mcp-up /path/to/project               # start server for another project
+sbt-mcp-up --cwd /path/to/project         # same, using --cwd form
+sbt-mcp-up --cwd /path/to/project --count-tokens   # with extra flags
+```
+
+The script assigns a **stable, unique port** (recorded in `~/.cache/mcp-sbt-shell/ports.json`), writes `.mcp.json` to configure Claude, and runs the server in the foreground with `--aggressive` and `--collapse-success` filters enabled by default. The port never changes across runs and no two projects share one.
+
+### Manual Setup (Alternative)
+
+Once installed with `uv tool install`, start the server directly with:
 
 ```bash
 mcp-sbt-shell
@@ -104,49 +123,13 @@ This server runs over **HTTP**, so Claude does not spawn it — you start it you
 The server must be running before Claude uses it and must stay running.
 Restarting it drops the sbt session; Claude simply reconnects to the URL.
 
-### Multiple mcp-sbt-shells
+### Running Multiple Servers
 
-Each server is bound to one `--cwd` and one port, so run **one server per
-project**, each on its own port. `scripts/sbt-mcp-up.sh` automates this: it
-assigns the project a **stable, unique port** (recorded in a small registry at
-`~/.cache/mcp-sbt-shell/ports.json`), writes `<project>/.mcp.json` to point at
-`http://127.0.0.1:<port>/mcp`, then runs the server in the foreground. The port
-never changes across runs and no two projects share one, so a project's Claude
-session always reaches its own server.
+If you need to run multiple `sbt-mcp-up` instances (one per project), run each in its own terminal. See the sbt-mcp-up section above for setup details.
 
-> If you change a project's port (e.g. from an older version that reused ports),
-> reconnect in Claude Code — run `/mcp` and reconnect `mcp-sbt-shell`, or restart
-> the session. Claude caches the `.mcp.json` URL at session start and won't pick
-> up a changed port on its own.
+If you change a project's port manually, reconnect in Claude Code — run `/mcp` and reconnect `mcp-sbt-shell`, or restart the session, since Claude caches the `.mcp.json` URL at session start.
 
-To run it from any project without typing the repo path, symlink it onto your
-`PATH` once (the script resolves the symlink to find its repo):
-
-```bash
-ln -s "$(pwd)/scripts/sbt-mcp-up.sh" ~/.local/bin/sbt-mcp-up
-```
-
-Then, in any project:
-
-```bash
-sbt-mcp-up                        # server for the current project
-sbt-mcp-up /path/to/project            # another project (bare dir)
-sbt-mcp-up --cwd /path/to/project      # another project (--cwd form)
-sbt-mcp-up /path/to/project --count-tokens   # extra server flags
-```
-
-(Without the symlink, invoke it as `scripts/sbt-mcp-up.sh` from the repo, or by
-its full path from anywhere.)
-
-The project can be a bare directory or `--cwd DIR`; any other flags are passed
-straight through to the server (a leading `--` is optional). `--aggressive` and
-`--collapse-success` are applied by default, so you don't need to repeat them.
-For accurate `--count-tokens` counts, export `ANTHROPIC_API_KEY` first.
-
-Run it once per project (each in its own terminal), then `/mcp` in that
-project's Claude Code session and enable `mcp-sbt-shell`. It uses `127.0.0.1`
-rather than `localhost` so it isn't intercepted on macOS, where `localhost`
-prefers IPv6 and other processes (e.g. Docker) may be bound there.
+**Note:** `sbt-mcp-up` uses `127.0.0.1` rather than `localhost` so it isn't intercepted on macOS, where `localhost` prefers IPv6 and other processes (e.g. Docker) may be bound there.
 
 ## Development
 

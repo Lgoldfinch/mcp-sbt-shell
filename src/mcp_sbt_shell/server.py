@@ -5,12 +5,12 @@ from .sbt_session import SbtSession
 from .token_counter import SavingsTracker, make_counter
 
 mcp = FastMCP("mcp-sbt-shell")
-sbt_session = None
-_timeout = None
+sbt_session: SbtSession | None = None
+_timeout: int | None = None
 _aggressive = False
 _collapse_success = False
 _keep_frame_prefixes: tuple[str, ...] = ()
-_savings = None
+_savings: SavingsTracker | None = None
 
 
 async def main_async(

@@ -11,15 +11,18 @@ counter makes a network call per command.
 """
 
 import sys
+from collections.abc import Callable
 
 _MODEL = "claude-opus-4-8"
+
+CountFn = Callable[[str], int]
 
 
 def _proxy(text: str) -> int:
     return max(1, len(text) // 4)
 
 
-def make_counter() -> tuple:
+def make_counter() -> tuple[CountFn, str]:
     """Return ``(count_fn, source_label)``; ``count_fn`` maps text -> token count."""
     import os
 
@@ -52,7 +55,7 @@ def make_counter() -> tuple:
 class SavingsTracker:
     """Accumulates token savings across calls and logs them to stderr."""
 
-    def __init__(self, count_fn, source: str):
+    def __init__(self, count_fn: CountFn, source: str) -> None:
         self._count = count_fn
         self.source = source
         self.calls = 0
