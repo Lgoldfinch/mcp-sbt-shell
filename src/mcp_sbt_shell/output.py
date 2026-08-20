@@ -9,7 +9,10 @@ Three layers, applied by :func:`clean_output`:
    replaces a clean run with a terse one-line marker plus any warnings.
 3. Aggressive (opt-in) — a ScalaTest-aware filter that keeps failure signal
    (``*** FAILED ***`` blocks, assertion detail, ``[error]``/``[warn]``) while
-   dropping passing-suite chatter.
+   dropping passing-suite chatter. It also drops framework/runtime stack frames
+   (keeping the project frame that matters), deduplicates identical traces across
+   failures, prepends a recompile-status header, and strips the low-value
+   ``[info]`` prefix.
 
 Whenever a layer drops or compresses content, a machine-actionable marker is
 appended so the caller knows to re-run with ``raw=true`` to recover it.
@@ -43,6 +46,21 @@ _SUMMARY_RE = re.compile(
 
 _MARKER_HIDDEN = "[{n} line{s} hidden — re-run with raw=true for the full log]"
 _MARKER_COLLAPSED = "[output collapsed — re-run with raw=true for the full log]"
+
+# Package prefixes whose stack frames are framework/runtime noise. A frame is
+# dropped when its class starts with one of these (unless force-kept by a
+# configured KEEP_FRAME_PREFIXES entry). Kept frames are usually the single
+# project ``…Test.scala:NNN`` line an engineer actually needs.
+_FRAMEWORK_FRAME_PREFIXES = ("org.scalatest", "scala.", "java.", "jdk.", "sbt.")
+
+# Recurring environment preamble that carries no signal and repeats every run.
+_ENV_PREAMBLE_RE = re.compile(r"Futhark library up to date:|^\s*WARNING: package .* not in ")
+
+# sbt's incremental-compile announcement, e.g. "compiling 3 Scala sources to …".
+_COMPILING_RE = re.compile(r"compiling (\d+) Scala sources?")
+
+# Commands for which a "no recompile (cached)" note is meaningful.
+_COMPILE_CMD_RE = re.compile(r"\b(compile|test)", re.IGNORECASE)
 
 
 def strip_ansi(text: str) -> str:
@@ -130,33 +148,94 @@ def collapse_success(text: str, command: str) -> str | None:
     return "\n".join([*warns, summary, _MARKER_COLLAPSED])
 
 
-def apply_aggressive(text: str) -> tuple[str, int]:
+def _frame_fqcn(stripped_content: str) -> str:
+    """Extract the fully-qualified class/method from a ``at pkg.Cls.m(File:NN)`` frame."""
+    return stripped_content[3:].split("(", 1)[0].strip()
+
+
+def _is_framework_frame(stripped_content: str, keep_frame_prefixes: tuple[str, ...]) -> bool:
+    """True if this ``at …`` frame is framework noise that should be dropped."""
+    fqcn = _frame_fqcn(stripped_content)
+    if any(fqcn.startswith(p) for p in keep_frame_prefixes):
+        return False  # force-kept by configuration
+    return any(fqcn.startswith(p) for p in _FRAMEWORK_FRAME_PREFIXES)
+
+
+def _failure_test_name(header_content: str) -> str:
+    """Parse the failing test name from a ``- name *** FAILED *** (Nms)`` header."""
+    name = header_content.split("*** FAILED ***")[0].split("*** ABORTED ***")[0]
+    return name.strip().lstrip("-").strip()
+
+
+def apply_aggressive(text: str, keep_frame_prefixes: tuple[str, ...]) -> tuple[str, int]:
     """ScalaTest-aware filter: keep failure signal, drop passing-suite chatter.
 
-    Returns ``(filtered_text, dropped_line_count)``.
+    Failure blocks are segmented so framework stack frames can be dropped (change
+    1) and identical traces deduplicated across failures (change 2). Returns
+    ``(filtered_text, dropped_line_count)``.
     """
     kept: list[str] = []
     dropped = 0
-    in_failure = False
+    seen_traces: dict[tuple[str, ...], str] = {}
+
+    # Current failure block: header line, its test name, and ordered continuation
+    # items tagged "msg" (assertion/source/exception header) or "frame".
+    block_header: str | None = None
+    block_name = ""
+    block_items: list[tuple[str, str]] = []
+
+    def flush_block() -> None:
+        nonlocal block_header, block_name, block_items
+        if block_header is None:
+            return
+        kept.append(block_header)
+        frame_lines = [line for kind, line in block_items if kind == "frame"]
+        sig = tuple(line.strip() for line in frame_lines)
+        if sig and sig in seen_traces:
+            for kind, line in block_items:
+                if kind == "msg":
+                    kept.append(line)
+            kept.append(f'  (same trace as "{seen_traces[sig]}")')
+        else:
+            if sig:
+                seen_traces[sig] = block_name
+            kept.extend(line for _, line in block_items)
+        block_header = None
+        block_name = ""
+        block_items = []
+
     for line in text.split("\n"):
         level, content = _log_level(line)
 
+        if _ENV_PREAMBLE_RE.search(line):
+            flush_block()
+            dropped += 1
+            continue
+
         if level in ("error", "warn"):
+            flush_block()
             kept.append(line)
-            in_failure = False
             continue
 
         if "*** FAILED ***" in line or "*** ABORTED ***" in line:
-            kept.append(line)
-            in_failure = True
+            flush_block()
+            block_header = line
+            block_name = _failure_test_name(content)
             continue
 
         # Continuation of a failure block: assertion message, source location,
-        # and stack frames are indented under the failing test.
-        if in_failure and (content[:1].isspace() or content.startswith("at ")):
-            kept.append(line)
+        # exception header, and stack frames are indented under the failing test.
+        stripped = content.strip()
+        if block_header is not None and (content[:1].isspace() or stripped.startswith("at ")):
+            if stripped.startswith("at "):
+                if _is_framework_frame(stripped, keep_frame_prefixes):
+                    dropped += 1
+                else:
+                    block_items.append(("frame", line))
+            else:
+                block_items.append(("msg", line))
             continue
-        in_failure = False
+        flush_block()
 
         if _SUMMARY_RE.search(content):
             kept.append(line)
@@ -168,10 +247,46 @@ def apply_aggressive(text: str) -> tuple[str, int]:
 
         dropped += 1
 
+    flush_block()
     return "\n".join(kept), dropped
 
 
-def clean_output(text: str, *, command: str, aggressive: bool, collapse_success_enabled: bool) -> str:
+def compile_status(text: str, command: str) -> str | None:
+    """One-line recompile-status header, or ``None`` when not meaningful.
+
+    Observability only — surfaces whether sbt actually recompiled so a caller can
+    tell a fresh result from a cached one. Does not change what sbt runs.
+    """
+    m = _COMPILING_RE.search(text)
+    if m:
+        n = int(m.group(1))
+        return f"compiled: {n} source" + ("" if n == 1 else "s")
+    if _COMPILE_CMD_RE.search(command):
+        return "no recompile (cached)"
+    return None
+
+
+def strip_info_prefix(text: str) -> str:
+    """Drop the leading ``[info] `` tag from lines, keeping ``[error]``/``[warn]``.
+
+    Preserves the compile-error vs test-output distinction. Must run after the
+    tag-aware filters, which rely on the ``[info]`` prefix being present.
+    """
+    out = []
+    for line in text.split("\n"):
+        level, content = _log_level(line)
+        out.append(content if level == "info" else line)
+    return "\n".join(out)
+
+
+def clean_output(
+    text: str,
+    *,
+    command: str,
+    aggressive: bool,
+    collapse_success_enabled: bool,
+    keep_frame_prefixes: tuple[str, ...],
+) -> str:
     """Filter raw sbt output for the MCP client.
 
     Order: safe cleanup → success collapse (if enabled) → aggressive (if enabled).
@@ -184,11 +299,15 @@ def clean_output(text: str, *, command: str, aggressive: bool, collapse_success_
             return collapsed
 
     if aggressive:
-        result, dropped = apply_aggressive(safe)
+        result, dropped = apply_aggressive(safe, keep_frame_prefixes)
         result = collapse_blank_lines(result).strip()
         if dropped:
             marker = _MARKER_HIDDEN.format(n=dropped, s="" if dropped == 1 else "s")
             result = f"{result}\n\n{marker}" if result else marker
+        result = strip_info_prefix(result)
+        header = compile_status(safe, command)
+        if header:
+            result = f"{header}\n{result}" if result else header
         return result
 
     return safe

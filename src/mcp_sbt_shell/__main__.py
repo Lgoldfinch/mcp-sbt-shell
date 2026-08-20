@@ -39,6 +39,16 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--keep-frame-prefixes",
+        type=str,
+        default="",
+        help="comma-separated class prefixes whose stack frames are always kept "
+        "in aggressive mode, even if they match a framework package "
+        "(e.g. com.topaz.). Framework frames (org.scalatest/scala./java./jdk./sbt.) "
+        "are dropped by default",
+    )
+
+    parser.add_argument(
         "--count-tokens",
         action="store_true",
         help="testing aid: log per-call and cumulative token savings to stderr "
@@ -60,6 +70,9 @@ def main():
             aggressive=args.aggressive,
             collapse_success=args.collapse_success,
             count_tokens=args.count_tokens,
+            keep_frame_prefixes=tuple(
+                p.strip() for p in args.keep_frame_prefixes.split(",") if p.strip()
+            ),
         )
     )
 

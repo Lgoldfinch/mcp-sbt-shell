@@ -47,9 +47,15 @@ def _modes(name: str) -> dict[str, str]:
     raw = fixtures.ALL[name]
     return {
         "raw": raw,
-        "safe": clean_output(raw, command=cmd, aggressive=False, collapse_success_enabled=False),
-        "aggressive": clean_output(raw, command=cmd, aggressive=True, collapse_success_enabled=False),
-        "collapse": clean_output(raw, command=cmd, aggressive=True, collapse_success_enabled=True),
+        "safe": clean_output(
+            raw, command=cmd, aggressive=False, collapse_success_enabled=False, keep_frame_prefixes=()
+        ),
+        "aggressive": clean_output(
+            raw, command=cmd, aggressive=True, collapse_success_enabled=False, keep_frame_prefixes=()
+        ),
+        "collapse": clean_output(
+            raw, command=cmd, aggressive=True, collapse_success_enabled=True, keep_frame_prefixes=()
+        ),
     }
 
 
